@@ -11,6 +11,7 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://ti-chu-website.pages.dev",
   output: "static",
   adapter: cloudflare({
     platformProxy: {
