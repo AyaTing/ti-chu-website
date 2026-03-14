@@ -1,0 +1,59 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<Layout title={`${project.data.title} | Ti Chu Interior Design`}>
+  <article>
+    <!-- Hero Image -->
+    <div class="w-full h-[60vh]">
+      <img 
+        src={project.data.heroImage} 
+        alt={project.data.title}
+        class="w-full h-full object-cover"
+      />
+    </div>
+    
+    <!-- Content -->
+    <div class="max-w-4xl mx-auto px-4 py-12">
+      <p class="text-sm text-gray-500 mb-2">{project.data.category}</p>
+      <h1 class="text-4xl font-bold mb-8">{project.data.title}</h1>
+      
+      <div class="prose lg:prose-xl mb-12">
+        <Content />
+      </div>
+      
+      <!-- Additional Images -->
+      {project.data.images && project.data.images.length > 0 && (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+          {project.data.images.map(img => (
+            <img 
+              src={img} 
+              alt={project.data.title}
+              class="w-full aspect-4/3 object-cover"
+            />
+          ))}
+        </div>
+      )}
+      
+      <!-- Back Link -->
+      <a 
+        href="/projects" 
+        class="inline-block text-blue-600 hover:underline"
+      >
+        ← 返回作品集
+      </a>
+    </div>
+  </article>
+</Layout>

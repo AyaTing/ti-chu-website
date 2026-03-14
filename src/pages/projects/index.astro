@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+
+const projects = await getCollection('projects');
+const sorted = projects.sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout title="作品集 | Ti Chu Interior Design">
+  <div class="max-w-7xl mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold mb-12">作品集</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sorted.map(project => (
+        <a 
+          href={`/projects/${project.id}`}
+          class="group block"
+        >
+          <div class="aspect-4/3 overflow-hidden mb-4">
+            <img 
+              src={project.data.heroImage} 
+              alt={project.data.title}
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
+          <p class="text-sm text-gray-500 mb-1">{project.data.category}</p>
+          <h2 class="text-xl font-medium group-hover:underline">
+            {project.data.title}
+          </h2>
+        </a>
+      ))}
+    </div>
+  </div>
+</Layout>
