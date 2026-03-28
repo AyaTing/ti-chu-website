@@ -7,28 +7,80 @@ const sorted = projects.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title="作品集 | Ti Chu Interior Design">
-  <div class="max-w-7xl mx-auto px-4 py-12">
-    <h1 class="text-4xl font-bold mb-12">作品集</h1>
+  <!-- 背景層 -->
+  <div class="fixed inset-0 -z-10 bg-linear-to-br from-gray-50 via-white to-gray-100"></div>
+  
+  <div class="max-w-7xl mx-auto px-4 py-16">
+    <div class="mb-16">
+      <h1 class="text-5xl font-bold mb-4">作品集</h1>
+      <p class="text-gray-600 text-lg">精選室內設計案例</p>
+    </div>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {sorted.map(project => (
+      {sorted.map((project, index) => (
         <a 
           href={`/projects/${project.id}`}
           class="group block"
+          style={`animation-delay: ${index * 0.1}s`}
         >
-          <div class="aspect-4/3 overflow-hidden mb-4">
+          <div class="
+            aspect-4/3 
+            overflow-hidden 
+            mb-4 
+            rounded-lg
+            bg-gray-100
+            shadow-md
+            transition-all 
+            duration-500
+            group-hover:shadow-2xl
+            group-hover:-translate-y-2
+          ">
             <img 
               src={project.data.heroImage} 
               alt={project.data.title}
-              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              class="
+                w-full 
+                h-full 
+                object-cover 
+                transition-transform 
+                duration-700
+                group-hover:scale-110
+              "
             />
           </div>
-          <p class="text-sm text-gray-500 mb-1">{project.data.category}</p>
-          <h2 class="text-xl font-medium group-hover:underline">
-            {project.data.title}
-          </h2>
+          
+          <div class="space-y-1">
+            <p class="text-sm text-gray-500 font-medium tracking-wide">
+              {project.data.category}
+            </p>
+            <h2 class="
+              text-xl 
+              font-semibold
+              transition-colors
+              group-hover:text-gray-600
+            ">
+              {project.data.title}
+            </h2>
+          </div>
         </a>
       ))}
     </div>
   </div>
 </Layout>
+
+<style>
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .group {
+    animation: fadeInUp 0.6s ease-out backwards;
+  }
+</style>

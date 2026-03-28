@@ -1,18 +1,186 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '@/layouts/Layout.astro';
+
+const projects = await getCollection('projects');
+const featured = projects
+  .filter(p => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
 ---
 
 <Layout>
-  <div class="min-h-screen flex items-center justify-center">
-    <div class="text-center">
-      <h1 class="text-6xl font-bold mb-4">Ti Chu</h1>
-      <p class="text-xl text-gray-600 mb-8">Interior Design</p>
-      <a 
-        href="/projects" 
-        class="inline-block px-8 py-3 bg-black text-white hover:bg-gray-800 transition"
-      >
-        查看作品集
-      </a>
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- 動態背景 -->
+    <div class="absolute inset-0 -z-10 bg-linear-to-br from-stone-100 via-white to-stone-50"></div>
+    
+    <div class="text-center px-4 space-y-8">
+      <h1 class="
+        text-6xl md:text-8xl 
+        font-bold 
+        tracking-tight
+        animate-fade-in
+      ">
+        Ti Chu
+      </h1>
+      
+      <p class="
+        text-xl md:text-2xl 
+        text-gray-600
+        animate-fade-in-delay
+      ">
+        室內設計 · 空間美學
+      </p>
+      
+      <div class="pt-8 animate-fade-in-delay-2">
+        <a 
+          href="/projects"
+          class="
+            inline-block
+            px-8 py-4
+            bg-black 
+            text-white
+            rounded-full
+            transition-all
+            duration-300
+            hover:bg-gray-800
+            hover:scale-105
+            hover:shadow-xl
+          "
+        >
+          探索作品
+        </a>
+      </div>
     </div>
-  </div>
+    
+    <!-- 向下箭頭提示 -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
+  </section>
+  
+  <!-- 委託流程 -->
+  <section class="py-24 bg-white">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-16">委託流程</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {[
+          { step: '01', title: '初步諮詢', desc: '了解需求與預算' },
+          { step: '02', title: '現場勘查', desc: '測量與空間評估' },
+          { step: '03', title: '設計提案', desc: '3D 圖與平面配置' },
+          { step: '04', title: '施工監造', desc: '品質把關與完工' },
+        ].map((item, i) => (
+          <div 
+            class="text-center space-y-4 group"
+            style={`animation-delay: ${i * 0.15}s`}
+          >
+            <div class="
+              text-5xl 
+              font-bold 
+              text-gray-200
+              transition-colors
+              duration-300
+              group-hover:text-gray-400
+            ">
+              {item.step}
+            </div>
+            <h3 class="text-xl font-semibold">{item.title}</h3>
+            <p class="text-gray-600">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- 精選作品 -->
+  {featured.length > 0 && (
+    <section class="py-24 bg-linear-to-b from-white to-gray-50">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-16">精選作品</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {featured.map((project, i) => (
+            <a 
+              href={`/projects/${project.id}`}
+              class="group block"
+              style={`animation-delay: ${i * 0.1}s`}
+            >
+              <div class="
+                aspect-4/3 
+                overflow-hidden 
+                rounded-lg
+                mb-4
+                shadow-lg
+                transition-all
+                duration-500
+                group-hover:shadow-2xl
+                group-hover:-translate-y-2
+              ">
+                <img 
+                  src={project.data.heroImage} 
+                  alt={project.data.title}
+                  class="
+                    w-full 
+                    h-full 
+                    object-cover
+                    transition-transform
+                    duration-700
+                    group-hover:scale-110
+                  "
+                />
+              </div>
+              <h3 class="text-xl font-semibold group-hover:text-gray-600 transition-colors">
+                {project.data.title}
+              </h3>
+            </a>
+          ))}
+        </div>
+        
+        <div class="text-center mt-12">
+          <a 
+            href="/projects"
+            class="
+              inline-block
+              px-6 py-3
+              border-2 border-black
+              rounded-full
+              transition-all
+              duration-300
+              hover:bg-black
+              hover:text-white
+            "
+          >
+            查看更多作品
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
 </Layout>
+
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 1s ease-out 0.2s backwards;
+  }
+  
+  .animate-fade-in-delay {
+    animation: fade-in 1s ease-out 0.5s backwards;
+  }
+  
+  .animate-fade-in-delay-2 {
+    animation: fade-in 1s ease-out 0.8s backwards;
+  }
+  
+  section > div > div > div {
+    animation: fade-in 0.8s ease-out backwards;
+  }
+</style>

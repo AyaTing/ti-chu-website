@@ -1,0 +1,85 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+const steps = [
+  {
+    number: '01',
+    title: '初步諮詢',
+    description: '了解您的需求、預算與期望，討論空間使用方式與設計方向。',
+  },
+  {
+    number: '02',
+    title: '現場勘查',
+    description: '實地測量空間尺寸，評估現況條件，拍照記錄環境狀況。',
+  },
+  {
+    number: '03',
+    title: '設計提案',
+    description: '提供平面配置圖、3D 示意圖與材質建議，確認設計方向。',
+  },
+  {
+    number: '04',
+    title: '細部設計',
+    description: '完成施工圖、水電圖、燈具配置等詳細圖面，確認所有細節。',
+  },
+  {
+    number: '05',
+    title: '施工監造',
+    description: '協助發包、定期監工、材料驗收，確保施工品質與進度。',
+  },
+  {
+    number: '06',
+    title: '驗收完工',
+    description: '最終驗收、軟裝佈置建議、提供售後服務與保固說明。',
+  },
+];
+---
+
+<Layout title="委託流程 | Ti Chu Interior Design">
+  <div class="min-h-screen bg-linear-to-b from-white to-gray-50">
+    <div class="max-w-5xl mx-auto px-4 py-24">
+      <!-- 標題 -->
+      <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold mb-4">委託流程</h1>
+        <p class="text-xl text-gray-600">從初步洽談到完工交屋，我們陪您走過每一步</p>
+      </div>
+      
+      <!-- 流程步驟 -->
+      <div class="space-y-8 mb-4">
+        {steps.map((step, index) => (
+          <div class="flex gap-8 items-start group">
+            <!-- 編號 -->
+            <div class="shrink-0 w-24 h-24 flex items-center justify-center">
+              <span class="text-5xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors">
+                {step.number}
+              </span>
+            </div>
+            
+            <!-- 內容 -->
+            <div class="flex-1 bg-white p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-start justify-between mb-4">
+                <h2 class="text-2xl font-bold">{step.title}</h2>
+                {/* <span class="text-sm text-gray-500 whitespace-nowrap ml-4">{step.duration}</span> */}
+              </div>
+              <p class="text-gray-600 leading-relaxed">{step.description}</p>
+            </div>
+            
+            {/* 連接線 */}
+            {index < steps.length - 1 && (
+              <div class="absolute left-12 mt-24 w-0.5 h-8 bg-gray-200"></div>
+            )}
+          </div>
+        ))}
+      </div>
+      
+      <div class="mt-16 text-center">
+        <a 
+          href="/contact"
+          class="inline-block px-8 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
+        >
+          聯絡我們
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>

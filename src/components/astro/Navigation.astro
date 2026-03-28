@@ -1,32 +1,82 @@
 ---
+import { navItems } from '@/config/navigation';
+import { getNavLinkClasses } from '@/utils/navigation';
+
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="border-b border-gray-200">
-  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-    <a href="/" class="text-2xl font-bold hover:opacity-70 transition">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/50">
+  <div class="max-w-7xl mx-auto px-4 py-5 flex items-center justify-between">
+    <!-- Logo -->
+    <a 
+      href="/" 
+      class="text-2xl font-bold tracking-tight transition-opacity hover:opacity-60"
+    >
       Ti Chu
     </a>
     
-    <div class="flex gap-8">
-      <a 
-        href="/" 
-        class:list={[
-          "hover:underline transition",
-          currentPath === "/" ? "font-bold" : ""
-        ]}
+    <!-- 桌面版導航 -->
+    <div class="hidden md:flex gap-8 text-sm">
+      {navItems.map(item => (
+        <a 
+          href={item.href}
+          class:list={getNavLinkClasses(item, currentPath)}
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+    
+    <!-- 手機版漢堡按鈕 -->
+    <button 
+      id="mobile-menu-button"
+      class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition"
+      aria-label="選單"
+    >
+      <svg 
+        id="hamburger-icon"
+        class="w-6 h-6" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
       >
-        首頁
-      </a>
-      <a 
-        href="/projects" 
-        class:list={[
-          "hover:underline transition",
-          currentPath.startsWith("/projects") ? "font-bold" : ""
-        ]}
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+      <svg 
+        id="close-icon"
+        class="w-6 h-6 hidden" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
       >
-        作品集
-      </a>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+  
+  <!-- 手機版選單 -->
+  <div 
+    id="mobile-menu"
+    class="hidden md:hidden border-t border-gray-200/50 bg-white/95 backdrop-blur-md"
+  >
+    <div class="px-4 py-6 space-y-4 text-right">
+      {navItems.map(item => (
+        <a 
+          href={item.href}
+          class:list={[...getNavLinkClasses(item, currentPath), 'block', 'py-2']}
+        >
+          {item.label}
+        </a>
+      ))}
     </div>
   </div>
 </nav>
+
+<!-- 佔位空間 -->
+<div class="h-20"></div>
+
+<script>
+  import { initMobileMenu } from '@/scripts/mobileMenu';
+  
+  initMobileMenu();
+</script>
