@@ -13,6 +13,7 @@ npm-debug.log*
 
 # tina generated files
 tina/__generated__
+public/admin/
 
 # environment variables
 .env
