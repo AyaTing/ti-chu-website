@@ -12,7 +12,7 @@ node_modules/
 npm-debug.log*
 
 # tina generated files
-.tina/__generated__
+tina/__generated__
 
 # environment variables
 .env
