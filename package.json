@@ -3,8 +3,8 @@
 	"type": "module",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "astro dev",
-		"build": "astro build",
+		"dev": "tinacms dev -c 'astro dev'",
+		"build": "tinacms build && astro build",
 		"preview": "astro build && wrangler pages dev",
 		"astro": "astro",
 		"deploy": "astro build && wrangler pages deploy",
@@ -15,12 +15,14 @@
 		"@astrojs/react": "^4.4.2",
 		"@astrojs/sitemap": "^3.7.0",
 		"@tailwindcss/vite": "^4.1.18",
+		"@tinacms/cli": "^2.2.6",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"astro": "^5.17.1",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
 		"tailwindcss": "^4.1.18",
+		"tinacms": "^3.7.6",
 		"zod": "^3.25.76"
 	},
 	"devDependencies": {

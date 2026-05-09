@@ -11,6 +11,9 @@ node_modules/
 *.log
 npm-debug.log*
 
+# tina generated files
+.tina/__generated__
+
 # environment variables
 .env
 .env.production

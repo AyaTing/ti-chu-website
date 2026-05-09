@@ -1,0 +1,10 @@
+fragment ProjectsParts on Projects {
+  __typename
+  title
+  category
+  heroImage
+  images
+  order
+  featured
+  body
+}
