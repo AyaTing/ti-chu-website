@@ -21,6 +21,10 @@ export default defineConfig({
     imageService: "cloudflare",
   }),
 
+  redirects: {
+    "/admin": "/admin/index.html",
+  },
+
   integrations: [react(), sitemap()],
 
   vite: {
