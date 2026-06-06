@@ -1,4 +1,5 @@
 import { defineConfig } from "tinacms";
+import { R2MediaStore } from "../src/lib/r2MediaStore";
 
 const branch =
   process.env.NEXT_PUBLIC_TINA_BRANCH ||
@@ -15,10 +16,7 @@ export default defineConfig({
     publicFolder: "public",
   },
   media: {
-    loadCustomStore: async () => {
-      const { R2MediaStore } = await import('../src/lib/r2MediaStore');
-      return R2MediaStore;
-    },
+    loadCustomStore: async () => R2MediaStore,
   },
   schema: {
     collections: [
