@@ -15,9 +15,9 @@ export default defineConfig({
     publicFolder: "public",
   },
   media: {
-    tina: {
-      mediaRoot: "images/projects",
-      publicFolder: "public",
+    loadCustomStore: async () => {
+      const { R2MediaStore } = await import('../src/lib/r2MediaStore');
+      return R2MediaStore;
     },
   },
   schema: {

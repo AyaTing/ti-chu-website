@@ -12,7 +12,14 @@
 	"pages_build_output_dir": "./dist",
 	"observability": {
 		"enabled": true
-	}
+	},
+	"r2_buckets": [
+		{
+			"binding": "MEDIA_BUCKET",
+			"bucket_name": "ti-chu-media",
+			"preview_bucket_name": "ti-chu-media-preview"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
