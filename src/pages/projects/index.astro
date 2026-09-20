@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 import Layout from '@/layouts/Layout.astro';
 
 const projects = await getCollection('projects');
-const sorted = projects.sort((a, b) => a.data.order - b.data.order);
+const sorted = [...projects].sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title="作品集 | Ti Chu Interior Design">

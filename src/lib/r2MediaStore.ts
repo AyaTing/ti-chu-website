@@ -1,5 +1,14 @@
 import type { Media, MediaList, MediaStore, MediaUploadOptions } from 'tinacms';
 
+async function parseApiError(res: Response, fallback: string): Promise<string> {
+  try {
+    const { error } = await res.json() as { error: string };
+    return error;
+  } catch {
+    return fallback;
+  }
+}
+
 export class R2MediaStore implements MediaStore {
   accept = 'image/*';
 
@@ -12,6 +21,9 @@ export class R2MediaStore implements MediaStore {
       if (directory) formData.append('directory', directory);
 
       const res = await fetch('/api/media', { method: 'POST', body: formData });
+      if (!res.ok) {
+        throw new Error(await parseApiError(res, 'Upload failed'));
+      }
       const { src } = (await res.json()) as { src: string };
 
       const parts = src.split('/');
@@ -36,14 +48,20 @@ export class R2MediaStore implements MediaStore {
     if (options?.directory) params.set('directory', options.directory);
 
     const res = await fetch(`/api/media?${params}`);
+    if (!res.ok) {
+      throw new Error(await parseApiError(res, 'Failed to list media'));
+    }
     const { items } = (await res.json()) as { items: Media[] };
 
     return { items };
   }
 
   async delete(media: Media): Promise<void> {
-    await fetch(`/api/media?src=${encodeURIComponent(media.src ?? '')}`, {
+    const res = await fetch(`/api/media?src=${encodeURIComponent(media.src ?? '')}`, {
       method: 'DELETE',
     });
+    if (!res.ok) {
+      throw new Error(await parseApiError(res, 'Failed to delete media'));
+    }
   }
 }
