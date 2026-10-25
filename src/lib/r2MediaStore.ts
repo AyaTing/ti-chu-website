@@ -9,8 +9,16 @@ async function parseApiError(res: Response, fallback: string): Promise<string> {
   }
 }
 
+interface TinaClient {
+  fetchWithToken(input: string, init?: RequestInit): Promise<Response>;
+}
+
 export class R2MediaStore implements MediaStore {
-  accept = 'image/*';
+  accept = 'image/jpeg,image/png,image/gif,image/webp,image/avif';
+
+  // Tina passes its client in; fetchWithToken attaches the Tina Cloud Bearer token
+  // that /api/media verifies server-side.
+  constructor(private client: TinaClient) {}
 
   async persist(files: MediaUploadOptions[]): Promise<Media[]> {
     const results: Media[] = [];
@@ -20,7 +28,7 @@ export class R2MediaStore implements MediaStore {
       formData.append('file', file);
       if (directory) formData.append('directory', directory);
 
-      const res = await fetch('/api/media', { method: 'POST', body: formData });
+      const res = await this.client.fetchWithToken('/api/media', { method: 'POST', body: formData });
       if (!res.ok) {
         throw new Error(await parseApiError(res, 'Upload failed'));
       }
@@ -47,7 +55,7 @@ export class R2MediaStore implements MediaStore {
     const params = new URLSearchParams();
     if (options?.directory) params.set('directory', options.directory);
 
-    const res = await fetch(`/api/media?${params}`);
+    const res = await this.client.fetchWithToken(`/api/media?${params}`);
     if (!res.ok) {
       throw new Error(await parseApiError(res, 'Failed to list media'));
     }
@@ -57,7 +65,7 @@ export class R2MediaStore implements MediaStore {
   }
 
   async delete(media: Media): Promise<void> {
-    const res = await fetch(`/api/media?src=${encodeURIComponent(media.src ?? '')}`, {
+    const res = await this.client.fetchWithToken(`/api/media?src=${encodeURIComponent(media.src ?? '')}`, {
       method: 'DELETE',
     });
     if (!res.ok) {
