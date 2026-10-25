@@ -9,6 +9,7 @@ type Status = 'idle' | 'loading' | 'success' | 'error';
 export default function ContactForm() {
   const [form, setForm] = useState({
     address: '', size: '', type: '', budget: '', name: '', phone: '', lineId: '', email: '', time: '',
+    website: '', // honeypot: real users never see or fill this
   });
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -56,6 +57,17 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <p className="text-lg font-semibold text-gray-800">填寫聯絡資訊</p>
+
+      <input
+        type="text"
+        name="website"
+        value={form.website}
+        onChange={e => set('website', e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
 
       {/* 房屋所在地 */}
       <div>

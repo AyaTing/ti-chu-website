@@ -3,6 +3,8 @@ import { Resend } from 'resend';
 
 export const prerender = false;
 
+const MAX_FIELD_LENGTH = 200;
+
 const toStr = (v: unknown) => typeof v === 'string' ? v : '';
 
 function escapeHtml(str: string): string {
@@ -45,6 +47,21 @@ export const POST: APIRoute = async ({ request }) => {
   const budget = toStr(body['budget']);
   const time = toStr(body['time']);
 
+  // Honeypot: bots fill the hidden field. Reply success so they don't retry, but send nothing.
+  if (toStr(body['website'])) {
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  if ([name, phone, lineId, email, address, size, type, budget, time].some((v) => v.length > MAX_FIELD_LENGTH)) {
+    return new Response(JSON.stringify({ error: '欄位內容過長' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   if (!name || !phone) {
     return new Response(JSON.stringify({ error: '姓名與電話為必填' }), {
       status: 400,
@@ -78,7 +95,8 @@ export const POST: APIRoute = async ({ request }) => {
   });
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error('Resend send failed:', error.message);
+    return new Response(JSON.stringify({ error: '發送失敗，請稍後再試' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

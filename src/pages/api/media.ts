@@ -90,14 +90,20 @@ export const ALL: APIRoute = async ({ request, locals }) => {
   if ((request.method === 'POST' || request.method === 'DELETE') && origin && !allowedOrigin) {
     return new Response(JSON.stringify({ error: 'Forbidden' }), {
       status: 403,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...CORS, 'Content-Type': 'application/json' },
     });
   }
 
   const url = new URL(request.url);
 
   if (request.method === 'GET') {
-    const directory = url.searchParams.get('directory') ?? '';
+    const directory = sanitizeDirectory(url.searchParams.get('directory') ?? '');
+    if (directory === null) {
+      return new Response(JSON.stringify({ error: 'Invalid directory' }), {
+        status: 400,
+        headers: { ...CORS, 'Content-Type': 'application/json' },
+      });
+    }
     const prefix = directory ? `${directory}/` : '';
     const list = await bucket.list({ prefix, delimiter: '/' });
 
