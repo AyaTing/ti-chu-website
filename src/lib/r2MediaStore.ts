@@ -9,6 +9,9 @@ async function parseApiError(res: Response, fallback: string): Promise<string> {
   }
 }
 
+// Tina only renders previews from item.thumbnails; R2 has no resizing, so every size is the original.
+const thumbnailsFor = (src: string) => ({ '75x75': src, '400x400': src, '1000x1000': src });
+
 interface TinaClient {
   authProvider: {
     fetchWithToken(input: string, init?: RequestInit): Promise<Response>;
@@ -43,6 +46,7 @@ export class R2MediaStore implements MediaStore {
         directory: directory ?? '',
         filename: parts[parts.length - 1],
         src,
+        thumbnails: thumbnailsFor(src),
       });
     }
 
@@ -61,7 +65,10 @@ export class R2MediaStore implements MediaStore {
     if (!res.ok) {
       throw new Error(await parseApiError(res, 'Failed to list media'));
     }
-    const { items } = (await res.json()) as { items: Media[] };
+    const { items: rawItems } = (await res.json()) as { items: Media[] };
+    const items = rawItems.map((item) =>
+      item.type === 'file' && item.src ? { ...item, thumbnails: thumbnailsFor(item.src) } : item,
+    );
 
     return { items };
   }
