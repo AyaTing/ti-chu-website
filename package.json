@@ -2,6 +2,9 @@
 	"name": "ti-chu-website",
 	"type": "module",
 	"version": "0.0.1",
+	"engines": {
+		"node": ">=24.22.1"
+	},
 	"scripts": {
 		"dev": "tinacms dev -c 'astro dev'",
 		"build": "tinacms build && astro build",
